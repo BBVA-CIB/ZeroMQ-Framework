@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<zmq_config version="1.0" xmlns="http://www.bbva.com/zeromq/config">
+		<instance_config name="fxConfig">
+	
+		<auto_discovery>
+			<time_to_live>1200</time_to_live>
+			<refresh_interval>5000</refresh_interval>
+			<node_type>client</node_type>
+			<transport_media>multicast</transport_media>
+			<addresses>224.0.0.0,224.0.0.1,224.0.0.2</addresses>
+			<reconnection_interval>5</reconnection_interval>
+			<reconnection_tries>10</reconnection_tries>
+		</auto_discovery>
+		
+		<pub_topic pattern=".*" socket_schema="default" />
+		<sub_topic pattern=".*" socket_schema="default" />
+		<req_topic pattern=".*" socket_schema="default" />
+		<resp_topic pattern=".*" socket_schema="default" />
+
+		<pub_socket_schema name="default">
+			<min_port>40000</min_port>
+			<max_port>40100</max_port>
+			<max_num_ports>2</max_num_ports>
+			<transport_media>tcp</transport_media>
+			<transport_interface>*</transport_interface>
+			<pub_rate_limit>100</pub_rate_limit>
+		</pub_socket_schema>
+
+		<sub_socket_schema name="default">
+			<sub_rate_limit>100</sub_rate_limit>
+		</sub_socket_schema>
+
+		<req_socket_schema name="default"/>
+
+		<resp_socket_schema name="default">
+			<min_port>52001</min_port>
+			<max_port>53001</max_port>
+			<max_num_ports>45</max_num_ports>
+			<transport_media>tcp</transport_media>
+			<transport_interface>*</transport_interface>
+		</resp_socket_schema>
+
+	</instance_config>
+</zmq_config>

@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:zero="http://www.bbva.com/zeromq/config"
+           targetNamespace="http://www.bbva.com/zeromq/config"
+           elementFormDefault="qualified" >
+
+    <xs:element name="zmq_config" type="zero:GlobalConfiguration"></xs:element>
+
+    <!-- Parent for the whole configuration, contains all the configured instances -->
+    <xs:complexType name="GlobalConfiguration">
+        <xs:sequence >
+            <xs:element name="instance_config" type="zero:InstanceConfig" minOccurs="1" maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+        
+        <xs:attribute name="version" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <!-- Represent an instance, each instance should have a unique identifier -->
+    <xs:complexType name="InstanceConfig">
+          
+        <xs:sequence>   
+            <xs:element name="auto_discovery" type="zero:AutoDiscoveryConfig" minOccurs="0" maxOccurs="1"></xs:element>
+                
+            <xs:element name="pub_topic" type="zero:PubTopicConfig" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="sub_topic" type="zero:SubTopicConfig" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="req_topic" type="zero:ReqTopicConfig" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="resp_topic" type="zero:RespTopicConfig" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            
+            <xs:element name="pub_socket_schema" type="zero:PubSocketSchema" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="sub_socket_schema" type="zero:SubSocketSchema" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="req_socket_schema" type="zero:ReqSocketSchema" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            <xs:element name="resp_socket_schema" type="zero:RespSocketSchema" minOccurs="0" maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+        
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+        <!-- Allows usage of ZMQ internal topic filtering for pub / sub -->
+        <xs:attribute name="use_native_zeromq_filtering" type="xs:boolean" default="false"></xs:attribute>
+    </xs:complexType>
+          
+    <!-- Represents an configurated auto-discovery instance -->
+    <xs:complexType name="AutoDiscoveryConfig">
+	    <xs:sequence>   
+	       <!-- Generic auto-discovery properties -->
+	      	<xs:element name="time_to_live" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+	     	<xs:element name="refresh_interval" type="xs:long" minOccurs="0" maxOccurs="1"></xs:element>
+	        <xs:element name="node_type" type="zero:NodeType" minOccurs="0" maxOccurs="1"></xs:element>   
+            <xs:element name="transport_media" type="zero:TransportMediaType" minOccurs="0" maxOccurs="1"></xs:element>
+	        <xs:element name="addresses" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+	    	<xs:element name="reconnection_interval" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+	     	<xs:element name="reconnection_tries" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+	    </xs:sequence>
+	</xs:complexType>
+
+     <xs:simpleType name="NodeType">
+	  <xs:restriction base="xs:string">
+	    <xs:enumeration value="client"/>
+	    <xs:enumeration value="storage_distributed"/>
+	  </xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TransportMediaType">
+	  <xs:restriction base="xs:string">
+	    <xs:enumeration value="tcp-ip"/>
+	    <xs:enumeration value="multicast"/>
+	  </xs:restriction>
+	</xs:simpleType>
+	      
+    <!-- Represents a configured publisher for topic publishing -->
+    <xs:complexType name="PubTopicConfig">
+        <!-- Java Regexp name which matches topics -->
+        <xs:attribute name="pattern" type="xs:string"></xs:attribute>
+        <xs:attribute name="socket_schema" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    
+    <!-- Represents a configured subscriber for topic subscribing -->
+    <xs:complexType name="SubTopicConfig">
+        <!-- Java Regexp name which matches topics -->
+        <xs:attribute name="pattern" type="xs:string"></xs:attribute>
+        <xs:attribute name="socket_schema" type="xs:string"></xs:attribute>
+    </xs:complexType>
+    
+    <!-- Represents a configured requester for topic requesting -->
+    <xs:complexType name="ReqTopicConfig">
+        <!-- Java Regexp name which matches topics -->
+        <xs:attribute name="pattern" type="xs:string"></xs:attribute>
+        <xs:attribute name="socket_schema" type="xs:string"></xs:attribute>
+    </xs:complexType>    
+
+    <!-- Represents a configured responder for topic responding -->
+    <xs:complexType name="RespTopicConfig">
+        <!-- Java Regexp name which matches topics -->
+        <xs:attribute name="pattern" type="xs:string"></xs:attribute>
+        <xs:attribute name="socket_schema" type="xs:string"></xs:attribute>
+    </xs:complexType>    
+
+    <!-- Represents a configured autodiscovery instance for topic generation and sharing -->
+    <xs:complexType name="PubSocketSchema">
+        <xs:sequence>
+            <!-- Generic socket properties -->
+            <xs:element name="min_port" type="xs:int" minOccurs="1" maxOccurs="1"></xs:element>
+            <!-- If no max_port is specified, min_port value will be used -->
+            <xs:element name="max_port" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+            <xs:element name="max_num_ports" type="xs:int" minOccurs="0" maxOccurs="1" default="1"></xs:element>
+
+            <!-- Generic socket properties -->
+            <xs:element name="transport_media" type="xs:string" minOccurs="0" maxOccurs="1" default="tcp"></xs:element>
+            <!-- /Generic socket properties -->
+
+            <!-- Publisher sockets properties (optional) -->
+            <xs:element name="transport_interface" type="xs:string" minOccurs="0" maxOccurs="1" default="*"></xs:element>
+            <xs:element name="pub_rate_limit" type="xs:long" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+       
+        <!-- Name for this schema -->
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="SubSocketSchema">
+        <xs:sequence>
+            <!-- Subscriber sockets properties (optional) -->
+            <xs:element name="sub_rate_limit" type="xs:long" minOccurs="0" maxOccurs="1"></xs:element>
+        </xs:sequence>
+      
+        <!-- Name for this schema-->
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ReqSocketSchema">
+        <xs:sequence>
+            <!-- Requester sockets properties (optional) -->
+       
+        </xs:sequence>
+       
+        <!-- Name for this schema -->
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+
+    <!-- Represents a configured auto discovery instance for topic generation and sharing -->
+    <xs:complexType name="RespSocketSchema">
+        <xs:sequence>
+            <!-- Generic socket properties -->
+            <xs:element name="min_port" type="xs:int" minOccurs="1" maxOccurs="1"></xs:element>
+            <!-- If no max_port is specified, min_port value will be used -->
+            <xs:element name="max_port" type="xs:int" minOccurs="0" maxOccurs="1"></xs:element>
+            <xs:element name="max_num_ports" type="xs:int" minOccurs="0" maxOccurs="1" default="1"></xs:element>
+
+            <!-- Generic socket properties -->
+            <xs:element name="transport_media" type="xs:string" minOccurs="0" maxOccurs="1" default="tcp"></xs:element>
+            <!-- /Generic socket properties -->
+
+            <!-- Responder sockets properties (optional) -->
+            <xs:element name="transport_interface" type="xs:string" minOccurs="0" maxOccurs="1" default="*"></xs:element>
+        </xs:sequence>
+        
+         <!-- Name for this schema  -->
+        <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+    </xs:complexType>
+</xs:schema>

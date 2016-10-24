@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<zmq_config version="1.0" xmlns="http://www.bbva.com/zeromq/config">
+	<instance_config name="TestInstance">
+	
+		<auto_discovery>
+			<time_to_live>1200</time_to_live>
+			<refresh_interval>5000</refresh_interval>
+			<node_type>client</node_type>
+			<transport_media>multicast</transport_media>
+			<addresses>224.2.2.3</addresses>
+			<reconnection_interval>5</reconnection_interval>
+			<reconnection_tries>10</reconnection_tries>
+		</auto_discovery>
+
+		<req_topic pattern=".*" socket_schema="default" />
+
+		<req_socket_schema name="default"/>
+
+	</instance_config>
+</zmq_config>
